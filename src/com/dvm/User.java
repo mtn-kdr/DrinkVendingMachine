@@ -7,7 +7,7 @@ import java.util.*;
 public class User implements UserOperations {
     protected static final String USER_FILE_PATH = "userinfo.txt";
 
-    static DrinkVendingMachine dvm = new DrinkVendingMachine(400, 540, 120, 9,  100, 1000);
+    static DrinkVendingMachine dvm = new DrinkVendingMachine(3000, 1000, 1000, 24,  1000, 1000);
     static Scanner scanner = new Scanner(System.in);
     private static User instance;
     private String userID;
@@ -15,9 +15,6 @@ public class User implements UserOperations {
     private String userType;
     private double userBalance;
 
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
 
     ArrayList<String> userinfo = new ArrayList<>();
 
@@ -40,11 +37,9 @@ public class User implements UserOperations {
         }
         return instance;
     }
-
     public double getUserBalance() {
         return userBalance;
     }
-
     public void setUserBalance(double userBalance) {
         this.userBalance = userBalance;
     }
@@ -52,18 +47,20 @@ public class User implements UserOperations {
     public String getUserID() {
         return userID;
     }
-
     public void setUserID(String userID) {
         this.userID = userID;
     }
-
-
     public void setUserPass(String userPass) {
         this.userPass = userPass;
     }
+
     public String getUserType() {
         return userType;
     }
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
 
     @Override
     public void signUp() {
@@ -87,6 +84,7 @@ public class User implements UserOperations {
         }
     }
 
+
     public void initValues() {
         fileToArray();
         for (int i = 0; i < userinfo.size(); i++) {
@@ -97,6 +95,7 @@ public class User implements UserOperations {
             }
         }
     }
+
 
     @Override
     public void login() {
@@ -127,6 +126,7 @@ public class User implements UserOperations {
 
             boolean exit = false;
             String choice;
+            dvm.loadStockFromFile(dvm);
 
             while (!exit) {
                 System.out.print("""
@@ -146,6 +146,8 @@ public class User implements UserOperations {
                         String userInput = scanner.next();
                         if (userInput.equalsIgnoreCase("evet")){
                             dvm.buy(dvm);
+                            dvm.saveStockToFile();
+
                         }
                         else if (userInput.equalsIgnoreCase("hayır")){
                             break;
@@ -174,7 +176,6 @@ public class User implements UserOperations {
     }
 
 
-
     void fileToArray() {
         try {
             String line;
@@ -190,6 +191,7 @@ public class User implements UserOperations {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void balance() {
@@ -250,6 +252,7 @@ public class User implements UserOperations {
             }
         }
     }
+
 
     @Override
     public void fileUpdate() {

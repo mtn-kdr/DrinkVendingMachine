@@ -27,6 +27,7 @@ public class Admin implements AdminOperations{
 
     boolean admin = false;
 
+
     public void adminLogin() {
         user.initValues();
 
@@ -45,6 +46,7 @@ public class Admin implements AdminOperations{
             }
         }
     }
+
 
     public void adminMenu() {
 
@@ -169,6 +171,7 @@ public class Admin implements AdminOperations{
         }
     }
 
+
     public void getUserInfos() {
         user.userinfo.clear();
 
@@ -181,6 +184,7 @@ public class Admin implements AdminOperations{
         System.out.println("Devam etmek için 'devam' geri çıkmak için 'geri' yazınız.");
 
     }
+
 
     public void updateUserInfo() {
         System.out.print("İşlem yapılacak Kullanıcı adını giriniz: ");

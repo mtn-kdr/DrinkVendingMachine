@@ -1,5 +1,9 @@
 package com.dvm;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class DrinkVendingMachine implements MachineOperations {
@@ -10,16 +14,15 @@ public class DrinkVendingMachine implements MachineOperations {
     private int milk;
     private int coffeeBeans;
     private int disposableCups;
-    static  private int money;
     private int tea;
     private int sugar;
     private Double moneyCase = 0.0;
 
-    public DrinkVendingMachine(int water, int milk, int coffeeBeans, int disposableCups, int tea, int sugar) {
+    public DrinkVendingMachine(int water, int milk,  int disposableCups, int coffeeBeans, int tea, int sugar) {
         this.water = water;
         this.milk = milk;
-        this.coffeeBeans = coffeeBeans;
         this.disposableCups = disposableCups;
+        this.coffeeBeans = coffeeBeans;
         this.tea = tea;
         this.sugar=sugar;
     }
@@ -79,7 +82,60 @@ public class DrinkVendingMachine implements MachineOperations {
         this.disposableCups = disposableCups;
     }
 
+    public void saveStockToFile() {
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("stock.txt"))) {
+
+            writer.write("Water: " + this.getWater() + "\n");
+            writer.write("Milk: " + this.getMilk() + "\n");
+            writer.write("Coffee Beans: " + this.getCoffeeBeans() + "\n");
+            writer.write("Disposable Cups: " + this.getDisposableCups() + "\n");
+            writer.write("Money: " + this.getMoneyCase() + "\n");
+            writer.write("Tea: " + this.getTea() + "\n");
+            writer.write("Sugar: " + this.getSugar() + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadStockFromFile(DrinkVendingMachine dvm) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("stock.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(": ");
+                if (parts.length == 2) {
+                    String itemName = parts[0].trim();
+                    double itemAmount = Double.parseDouble(parts[1].trim());
+
+                    switch (itemName) {
+                        case "Water":
+                            dvm.setWater((int) itemAmount);
+                            break;
+                        case "Milk":
+                            dvm.setMilk((int) itemAmount);
+                            break;
+                        case "Coffee Beans":
+                            dvm.setCoffeeBeans((int) itemAmount);
+                            break;
+                        case "Disposable Cups":
+                            dvm.setDisposableCups((int) itemAmount);
+                            break;
+                        case "Money":
+                            dvm.setMoneyCase(itemAmount);
+                            break;
+                        case "Tea":
+                            dvm.setTea((int) itemAmount);
+                            break;
+                        case "Sugar":
+                            dvm.setSugar((int) itemAmount);
+                            break;
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void showSupply(DrinkVendingMachine dvm){
         System.out.println("Makinenin Stok Durumu" +
@@ -167,6 +223,7 @@ public class DrinkVendingMachine implements MachineOperations {
                     user.setUserBalance(userBalanceBefore - teaLatteMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase()+teaLatteMoney);
                     user.fileUpdate();
+
                 }
                 else {
                     System.out.println("Yetersiz Bakiye");

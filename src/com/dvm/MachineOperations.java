@@ -8,5 +8,7 @@ interface MachineOperations {
     String checkWhatIsNotEnoughTea(DrinkVendingMachine dvm, Tea tea);
     void fill(DrinkVendingMachine dvm);
     void listDrinks(DrinkVendingMachine dvm);
+    void loadStockFromFile(DrinkVendingMachine drinkVendingMachine);
+    void saveStockToFile();
 
 }

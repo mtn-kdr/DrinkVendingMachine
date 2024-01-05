@@ -2,9 +2,13 @@ package com.dvm;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
+    static DrinkVendingMachine dvm = new DrinkVendingMachine(3000, 1000, 1000, 24,  1000, 1000);
 
     public static void main(String[] argv) {
         System.out.print("""
@@ -33,8 +37,20 @@ public class Main {
         User user = User.getInstance();
         Admin admin = new Admin();
 
+        Path filePath = Paths.get("stock.txt");
+        if (!Files.exists(filePath)) {
+            try {
+                Files.createFile(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
         boolean exit = false;
         int inputValue;
+
+
         while(!exit){
             System.out.println("""
                     1-Giriş Yap
@@ -52,6 +68,7 @@ public class Main {
             * */
 
 
+            dvm.loadStockFromFile(dvm);
             switch (inputValue){
                 case 1:
                     user.login();
