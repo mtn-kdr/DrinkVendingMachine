@@ -1,3 +1,4 @@
 metin	123	admin	-1	
-user1	user1pass	user	0.0
-user2	passw0rd	user	25	
+user1	user1pass	user	95.0
+user2	passWD	user	50
+admin	4dmin	admin	100

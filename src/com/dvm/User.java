@@ -6,7 +6,8 @@ import java.util.*;
 
 public class User implements UserOperations {
     protected static final String USER_FILE_PATH = "userinfo.txt";
-    static DrinkVendingMachine dvm = new DrinkVendingMachine(400, 540, 120, 9, 0, 1000, 1000);
+
+    static DrinkVendingMachine dvm = new DrinkVendingMachine(400, 540, 120, 9,  100, 1000);
     static Scanner scanner = new Scanner(System.in);
     private static User instance;
     private String userID;
@@ -39,7 +40,6 @@ public class User implements UserOperations {
         }
         return instance;
     }
-    //static ArrayList<Double> userBalance = new ArrayList<>();
 
     public double getUserBalance() {
         return userBalance;
@@ -57,21 +57,18 @@ public class User implements UserOperations {
         this.userID = userID;
     }
 
-    /*public static String getUserPass() {
-        return userPass;
-    }*/
 
     public void setUserPass(String userPass) {
         this.userPass = userPass;
     }
-
-    // kullanici verileri dosyadan okunup dosyaya yazilacak
-    // dosyadan okunan kullanici verileri bir list veya mape aktarilacak
+    public String getUserType() {
+        return userType;
+    }
 
     @Override
     public void signUp() {
 
-        System.out.print("Kullanici adi: ");
+        System.out.print("Kullanıcı adı: ");
         Scanner newUserIDInput = new Scanner(System.in);
         userID = newUserIDInput.nextLine();
 
@@ -81,13 +78,10 @@ public class User implements UserOperations {
 
         userType = "user";
 
-        //write without owrite
         try (FileWriter fstream = new FileWriter(USER_FILE_PATH, true);
             BufferedWriter output = new BufferedWriter(fstream)){
 
             output.write(userID + "\t" + userPass + "\t" + userType + "\n");
-            output.close();
-            fstream.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -107,11 +101,11 @@ public class User implements UserOperations {
     @Override
     public void login() {
 
-        System.out.print("Kullanici adinizi giriniz: ");
+        System.out.print("Kullanıcı adınızı giriniz: ");
         String loginUserID = scanner.next();
         setUserID(loginUserID);
 
-        System.out.print("Parolanizi giriniz: ");
+        System.out.print("Parolanızı giriniz: ");
         String loginUserPass = scanner.next();
         setUserPass(loginUserPass);
 
@@ -147,7 +141,6 @@ public class User implements UserOperations {
 
                 switch (choice) {
                     case "1":
-                        //icecekleri listeleyecek metot calisacak
                         dvm.listDrinks(dvm);
                         System.out.println("İçecek almak ister misiniz? (evet, hayır)");
                         String userInput = scanner.next();
@@ -158,7 +151,7 @@ public class User implements UserOperations {
                             break;
                         }
                         else{
-                            System.out.println("Gecerli bir deger giriniz.");
+                            System.out.println("Geçerli bir değer giriniz.");
                         }
                         break;
                     case "2":
@@ -176,13 +169,11 @@ public class User implements UserOperations {
                 }
             }
         } else {
-            System.out.println("Kullanici yok.");
+            System.out.println("Kullanıcı bulunamadı.");
         }
     }
 
-    public String getUserType() {
-        return userType;
-    }
+
 
     void fileToArray() {
         try {
@@ -191,16 +182,7 @@ public class User implements UserOperations {
             while ((line = reader.readLine()) != null) {
                 userinfo.add(line);
             }
-            /*BufferedReader reader = new BufferedReader(new FileReader(USER_FILE_PATH));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] userInfoArray = line.split("\t");
-                if (userInfoArray.length >= 3) {
-                    double balance = Double.parseDouble(userInfoArray[3]);
-                    userinfo.add(line);
-                    userBalance.add(balance);
-                }
-            }*/
+
             reader.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -216,13 +198,13 @@ public class User implements UserOperations {
         while (!exit) {
             System.out.print("""
                     1-Sorgulama
-                    2-Yukleme
-                    3-Geri Don
+                    2-Yükleme
+                    3-Geri Dön
                     """);
             String choice = scanner.next();
             switch (choice) {
                 case "1":
-                    System.out.print("Guncel bakiye: " + this.userBalance+"\n");
+                    System.out.print("Güncel bakiye: " + this.userBalance+"\n");
                     for (int i = 0; i < userinfo.size(); i++) {
                         String[] userInfoArray = userinfo.get(i).split("\t");
                         if (userInfoArray.length >= 3 && userInfoArray[0].equals(getUserID())) {
@@ -280,7 +262,6 @@ public class User implements UserOperations {
 
             while ((line = reader.readLine()) != null) {
                 if (line.trim().startsWith(userID)) {
-                    // Kullanıcının bilgilerini güncelle
                     String[] userInfoArray = line.split("\t");
                     userInfoArray[3] = String.valueOf(this.userBalance);
                     line = String.join("\t", userInfoArray);
@@ -294,7 +275,7 @@ public class User implements UserOperations {
 
             if (file.delete()) {
                 if (tempFile.renameTo(file)) {
-                    //System.out.println("Kullanıcının bakiyesi başarıyla güncellendi.");
+                    System.out.println("Kullanıcı Bakiyesi: "+getUserBalance());
                 } else {
                     System.err.println("Dosya adı değiştirilirken bir hata oluştu.");
                 }

@@ -44,31 +44,19 @@ public class Main {
             inputValue = scanner.nextInt();
 
             //TODO
-            /* admin ozellikleri:
-                anlik okuma(onceki dosya bilgileri geliyor)
-                ---------------------------------
-                try-catch uygun hata kontrolu
-                ---------------------------------
+            /* -
                 menunun duzgunlesitirilmesi
                 final kavrami icin uygun yer bulunmasi
+                logger?
 
             * */
 
-            // kullanici ve kullanici giris eklenecek
-            /*kullanici:
-                userId ve pass ile dogrulana
-                bakiye sisteminin kullanici icinde olmasi
-                kullanici degerleri dosyadan okunacak
-
-            */
 
             switch (inputValue){
                 case 1:
-                    //giris yapma metodu calisacak, kullanici islemleri menusune yonlendirecek
                     user.login();
                     break;
                 case 2:
-                    //uye ol metodu calisacak
                     user.signUp();
                     break;
                 case 3:
@@ -79,7 +67,7 @@ public class Main {
                     admin.adminMenu();
                     break;
                 default:
-                    System.out.println("Gecerli bir deger giriniz.");
+                    System.out.println("Geçerli bir değer giriniz.");
             }
         }
     }

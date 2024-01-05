@@ -15,12 +15,11 @@ public class DrinkVendingMachine implements MachineOperations {
     private int sugar;
     private Double moneyCase = 0.0;
 
-    public DrinkVendingMachine(int water, int milk, int coffeeBeans, int disposableCups, int money, int tea, int sugar) {
+    public DrinkVendingMachine(int water, int milk, int coffeeBeans, int disposableCups, int tea, int sugar) {
         this.water = water;
         this.milk = milk;
         this.coffeeBeans = coffeeBeans;
         this.disposableCups = disposableCups;
-        this.money = money;
         this.tea = tea;
         this.sugar=sugar;
     }
@@ -80,12 +79,7 @@ public class DrinkVendingMachine implements MachineOperations {
         this.disposableCups = disposableCups;
     }
 
-    public static int getMoney() {
-        return money;
-    }
-    public void setMoney(int money) {
-        this.money = money;
-    }
+
 
     public void showSupply(DrinkVendingMachine dvm){
         System.out.println("Makinenin Stok Durumu" +
@@ -106,59 +100,64 @@ public class DrinkVendingMachine implements MachineOperations {
         switch(inputValue){
             case "1" :
                 double latteMoney = Latte.getMoney();
-                if (userBalanceBefore >= latteMoney) {
-                    System.out.println(checkWhatIsNotEnoughCoffee(dvm, new Latte()));
+                String resultMessage = checkWhatIsNotEnoughCoffee(dvm, new Latte());
+                if (userBalanceBefore >= latteMoney && !resultMessage.startsWith("Yeter")) {
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - latteMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase() + latteMoney);
                     user.fileUpdate();
                 } else {
-                    System.out.println("Yetersiz Bakiye");
+                    System.out.println("Yetersiz Bakiye veya malzeme");
                 }
                 break;
             case "2" :
                 double espressoMoney = Espresso.getMoney();
-                if (userBalanceBefore >= espressoMoney) {
-                    System.out.println(checkWhatIsNotEnoughCoffee(dvm, new Espresso()));
+                resultMessage = checkWhatIsNotEnoughCoffee(dvm, new Espresso());
+                if (userBalanceBefore >= espressoMoney && !resultMessage.startsWith("Yeter")) {
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - espressoMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase() + espressoMoney);
                     user.fileUpdate();
                 } else {
-                    System.out.println("Yetersiz Bakiye");
+                    System.out.println("Yetersiz Bakiye veya malzeme");
                 }
                 break;
             case "3" :
                 double cappMoney = Cappuccino.getMoney();
-                if (userBalanceBefore >= cappMoney) {
-                    System.out.println(checkWhatIsNotEnoughCoffee(dvm, new Cappuccino()));
+                resultMessage = checkWhatIsNotEnoughCoffee(dvm, new Cappuccino());
+                if (userBalanceBefore >= cappMoney && !resultMessage.startsWith("Yeter")) {
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - cappMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase() + cappMoney);
                     user.fileUpdate();
                 } else {
-                    System.out.println("Yetersiz Bakiye");
+                    System.out.println("Yetersiz Bakiye veya malzeme");
                 }
                 break;
             case "4":
                 double sweetMoney = SweetTea.getMoney();
-                if (userBalanceBefore >= sweetMoney){
-                    System.out.println(checkWhatIsNotEnoughTea(dvm, new SweetTea()));
+                resultMessage = checkWhatIsNotEnoughTea(dvm, new SweetTea());
+                if (userBalanceBefore >= sweetMoney && !resultMessage.startsWith("Yeter")) {
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - sweetMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase()+sweetMoney);
                     user.fileUpdate();
                 }
                 else {
-                    System.out.println("Yetersiz Bakiye");
+                    System.out.println("Yetersiz Bakiye veya malzeme");
                 }
                 break;
             case "5":
                 double unsweetMoney = UnsweetenedTea.getMoney();
-                if (userBalanceBefore >= unsweetMoney){
-                    System.out.println(checkWhatIsNotEnoughTea(dvm, new UnsweetenedTea()));
+                resultMessage = checkWhatIsNotEnoughTea(dvm, new UnsweetenedTea());
+                if (userBalanceBefore >= unsweetMoney && !resultMessage.startsWith("Yeter")) {
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - unsweetMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase()+unsweetMoney);
                     user.fileUpdate();
                 }
                 else {
-                    System.out.println("Yetersiz Bakiye");
+                    System.out.println("Yetersiz Bakiye veya malzeme");
                 }
                 break;
             case "6":
@@ -218,7 +217,12 @@ public class DrinkVendingMachine implements MachineOperations {
             dvm.setMilk(dvm.getMilk() - tea.getMilk());
             dvm.setTea(dvm.getTea() - tea.getTea());
             dvm.setDisposableCups(dvm.getDisposableCups() - 1);
-            return "Hazirlaniyor...";
+            return "  (\n" +
+                    "   ) )\n" +
+                    " ........\n" +
+                    " |      |\n" +
+                    " \\      /     \n" +
+                    "  `----'\nAfiyet Olsun...";
         }
     }
     public void fill(DrinkVendingMachine dvm){
@@ -228,9 +232,9 @@ public class DrinkVendingMachine implements MachineOperations {
         dvm.setMilk(scanner.nextInt() +  dvm.getMilk());
         System.out.print("Eklemek istediğiniz çay miktarını yazın(gr): ");
         dvm.setTea(scanner.nextInt() + dvm.getTea());
-        System.out.print("Eklemek istediğiniz kahve miktarlını yazın(gr): ");
+        System.out.print("Eklemek istediğiniz kahve miktarını yazın(gr): ");
         dvm.setCoffeeBeans(scanner.nextInt() + dvm.getCoffeeBeans());
-        System.out.print("Eklemek istediğiniz şeker miktarlını yazın(gr): ");
+        System.out.print("Eklemek istediğiniz şeker miktarını yazın(gr): ");
         dvm.setSugar(scanner.nextInt() + dvm.getSugar());
     }
 
@@ -245,7 +249,7 @@ public class DrinkVendingMachine implements MachineOperations {
                 4-Çay
                 5-Çay (Şekersiz)
                 6-Sütlü Çay
-                7-Geri Don
+                7-Geri Dön
                 """);
     }
 }
