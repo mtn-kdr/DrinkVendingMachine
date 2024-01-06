@@ -112,9 +112,9 @@ public class Admin implements AdminOperations{
                             while (!checkUsername) {
                                 System.out.print("Kullanıcı adı: ");
                                 newUsername = scanner.next();
-                                if (newUsername.matches("[a-zA-Z]{3,}")) {
+                                if (newUsername.matches("[a-zA-Z0-9]{3,}")) {
                                     checkUsername = true;
-                                } else if (newUsername.matches("[a-zA-Z0-9]+")) {
+                                } else if (!newUsername.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?].*")) {
                                     System.out.println("Yalnızca harf ve rakam kullanın.");
                                 } else {
                                     System.out.println("Kullanıcı adı en az 3 harf içermeli");
