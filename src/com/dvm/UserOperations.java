@@ -7,5 +7,5 @@ public interface UserOperations {
     void balance();
     void fileUpdate();
     void fileToArray();
-
+    void initValues();
 }

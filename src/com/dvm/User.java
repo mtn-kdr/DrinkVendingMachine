@@ -84,7 +84,7 @@ public class User implements UserOperations {
         }
     }
 
-
+    @Override
     public void initValues() {
         fileToArray();
         for (int i = 0; i < userinfo.size(); i++) {
@@ -175,7 +175,7 @@ public class User implements UserOperations {
         }
     }
 
-
+    @Override
     public void fileToArray() {
         try {
             String line;
