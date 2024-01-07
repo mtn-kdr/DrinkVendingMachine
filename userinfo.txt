@@ -1,4 +1,6 @@
 metin	123	admin	-1	
-user1	user1pass	user	124.0
+user1	user1pass	user	117.0
 user2	passWD	user	50
 admin	4dmin	admin	100
+asd123	asd213	user	15
+deneme	1972	user	50
