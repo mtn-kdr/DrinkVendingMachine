@@ -218,8 +218,9 @@ public class DrinkVendingMachine implements MachineOperations {
                 break;
             case "6":
                 double teaLatteMoney = TeaLatte.getMoney();
-                if (userBalanceBefore >= teaLatteMoney){
-                    System.out.println(checkWhatIsNotEnoughTea(dvm, new TeaLatte()));
+                resultMessage = checkWhatIsNotEnoughTea(dvm, new TeaLatte());
+                if (userBalanceBefore >= teaLatteMoney && !resultMessage.startsWith("Yeter")){
+                    System.out.println(resultMessage);
                     user.setUserBalance(userBalanceBefore - teaLatteMoney);
                     dvm.setMoneyCase(dvm.getMoneyCase()+teaLatteMoney);
                     user.fileUpdate();
