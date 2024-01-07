@@ -1,6 +1,7 @@
 package com.dvm;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 
@@ -75,12 +76,28 @@ public class User implements UserOperations {
 
         userType = "user";
 
-        try (FileWriter fstream = new FileWriter(USER_FILE_PATH, true);
-            BufferedWriter output = new BufferedWriter(fstream)){
+        boolean exists = false;
+        fileToArray();
+        for (int i = 0; i < userinfo.size(); i++) {
+            String[] userInfoArray = userinfo.get(i).split("\t");
+            if (userInfoArray.length >= 4 && userInfoArray[0].equals(getUserID())) {
+                exists = true;
 
-            output.write(userID + "\t" + userPass + "\t" + userType + "\n");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+                break;
+            }
+        }
+
+        if (!exists) {
+            try (FileWriter fstream = new FileWriter(USER_FILE_PATH, true);
+                 BufferedWriter output = new BufferedWriter(fstream)) {
+
+                output.write(userID + "\t" + userPass + "\t" + userType + "\t" + 0 + "\n");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        else {
+            System.out.println("Kullanıcı sistemde mevcut.");
         }
     }
 
@@ -206,14 +223,17 @@ public class User implements UserOperations {
             String choice = scanner.next();
             switch (choice) {
                 case "1":
-                    System.out.print("Güncel bakiye: " + this.userBalance+"\n");
                     for (int i = 0; i < userinfo.size(); i++) {
                         String[] userInfoArray = userinfo.get(i).split("\t");
-                        if (userInfoArray.length >= 3 && userInfoArray[0].equals(getUserID())) {
-                            userInfoArray[3] = String.valueOf(this.userBalance);
+                        if (userInfoArray.length >= 4 && userInfoArray[0].equals(getUserID())) {
+                            if (userInfoArray[3] == null){
+                                setUserBalance(0);
+                            }
                             break;
                         }
                     }
+                    System.out.print("Güncel bakiye: " + this.userBalance+"\n");
+
                     break;
                 case "2":
                     try {
