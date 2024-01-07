@@ -176,7 +176,7 @@ public class User implements UserOperations {
     }
 
 
-    void fileToArray() {
+    public void fileToArray() {
         try {
             String line;
             BufferedReader reader = new BufferedReader(new FileReader(USER_FILE_PATH));

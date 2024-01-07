@@ -6,5 +6,6 @@ public interface UserOperations {
     void login();
     void balance();
     void fileUpdate();
+    void fileToArray();
 
 }
