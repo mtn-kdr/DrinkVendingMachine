@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLOutput;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import static com.dvm.User.dvm;
@@ -14,6 +16,9 @@ import static com.dvm.User.dvm;
 public class Admin implements AdminOperations{
     Scanner scanner = new Scanner(System.in);
     User user = User.getInstance();
+
+    File file = new File("adminwallet.txt");
+    FileWriter fstream;
 
     private double adminWallet;
 
@@ -30,6 +35,7 @@ public class Admin implements AdminOperations{
 
     public void adminLogin() {
         user.initValues();
+        dvm.loadStockFromFile(dvm);
 
         System.out.print("Admin ID: ");
         String adminID = scanner.next();
@@ -50,8 +56,7 @@ public class Admin implements AdminOperations{
 
     public void adminMenu() {
 
-        File file = new File("adminwallet.txt");
-        FileWriter fstream;
+
 
         boolean exit = false;
         if (admin) {
@@ -67,23 +72,7 @@ public class Admin implements AdminOperations{
 
                 switch (choice) {
                     case "1":
-                        try {
-                            setAdminWallet(dvm.getMoneyCase());
-                            fstream = new FileWriter("adminwallet.txt", true);
-                            BufferedWriter output = new BufferedWriter(fstream);
-                            output.write("Sahibin cüzdanına " + dvm.getMoneyCase() + " eklendi.\n");
-
-                            dvm.setMoneyCase(0);
-                            setAdminWallet(dvm.getMoneyCase() + getAdminWallet());
-
-                            System.out.print("Güncel sahip cüzdani bakiyesi: \n" + getAdminWallet());
-                            System.out.print("Güncel kasa bakiyesi:  " + dvm.getMoneyCase());
-
-                            output.close();
-                            fstream.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        withdrawMoney();
                         break;
 
                     case "2":
@@ -102,63 +91,7 @@ public class Admin implements AdminOperations{
                         break;
 
                     case "3":
-                        try  {
-                            fstream = new FileWriter(User.USER_FILE_PATH, true);
-                            BufferedWriter output = new BufferedWriter(fstream);
-
-
-                            boolean checkUsername = false;
-                            String newUsername = "";
-                            while (!checkUsername) {
-                                System.out.print("Kullanıcı adı: ");
-                                newUsername = scanner.next();
-                                if (newUsername.matches("[a-zA-Z0-9]{3,}")) {
-                                    checkUsername = true;
-                                } else if (!newUsername.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?].*")) {
-                                    System.out.println("Yalnızca harf ve rakam kullanın.");
-                                } else {
-                                    System.out.println("Kullanıcı adı en az 3 harf içermeli");
-                                }
-                            }
-
-
-                            boolean checkPassword = false;
-                            String newPass = "";
-
-                            while (!checkPassword) {
-                                System.out.print("Parola: ");
-                                newPass = scanner.next();
-                                if (newPass.matches("[a-zA-Z0-9]+")) {
-                                    checkPassword = true;
-                                } else {
-                                    System.out.println("Parola yalnızca harf ve rakam içermelidir.");
-                                }
-                            }
-
-                            String newUserType = "";
-                            boolean checkUserType = false;
-
-                            while (!checkUserType) {
-                                System.out.print("Kullanıcı tipi (admin/user): ");
-                                newUserType = scanner.next();
-                                if (newUserType.equalsIgnoreCase("admin") || newUserType.equalsIgnoreCase("user")) {
-                                    checkUserType = true;
-                                } else {
-                                    System.out.println("Kullanıcı tipi sadece 'admin' veya 'user' olabilir.");
-                                }
-                            }
-
-                            System.out.print("Kullanıcı bakiyesi: ");
-                            String newUserBalance = scanner.next();
-
-                            output.write(newUsername + "\t" + newPass + "\t" + newUserType + "\t" + newUserBalance + "\n");
-                            output.close();
-                            fstream.close();
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        adminAddUser();
                         break;
                     case "4":
                         exit = true;
@@ -171,6 +104,90 @@ public class Admin implements AdminOperations{
         }
     }
 
+    public void withdrawMoney(){
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+
+            fstream = new FileWriter("adminwallet.txt", true);
+            BufferedWriter output = new BufferedWriter(fstream);
+
+            output.write(dtf.format(now)+" Tarihinde kasaya cüzdanına " + dvm.getMoneyCase() + " eklendi.\n");
+            setAdminWallet(dvm.getMoneyCase() + getAdminWallet());
+            dvm.setMoneyCase(0);
+
+            System.out.println("Güncel sahip cüzdani bakiyesi: " + getAdminWallet());
+            System.out.println("Güncel kasa bakiyesi:  " + dvm.getMoneyCase());
+
+            output.close();
+            fstream.close();
+
+            dvm.saveStockToFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void adminAddUser(){
+        try  {
+            fstream = new FileWriter(User.USER_FILE_PATH, true);
+            BufferedWriter output = new BufferedWriter(fstream);
+
+
+            boolean checkUsername = false;
+            String newUsername = "";
+            while (!checkUsername) {
+                System.out.print("Kullanıcı adı: ");
+                newUsername = scanner.next();
+                if (newUsername.matches("[a-zA-Z0-9]{3,}")) {
+                    checkUsername = true;
+                } else if (!newUsername.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?].*")) {
+                    System.out.println("Yalnızca harf ve rakam kullanın.");
+                } else {
+                    System.out.println("Kullanıcı adı en az 3 harf içermeli");
+                }
+            }
+
+
+            boolean checkPassword = false;
+            String newPass = "";
+
+            while (!checkPassword) {
+                System.out.print("Parola: ");
+                newPass = scanner.next();
+                if (newPass.matches("[a-zA-Z0-9]+")) {
+                    checkPassword = true;
+                } else {
+                    System.out.println("Parola yalnızca harf ve rakam içermelidir.");
+                }
+            }
+
+            String newUserType = "";
+            boolean checkUserType = false;
+
+            while (!checkUserType) {
+                System.out.print("Kullanıcı tipi (admin/user): ");
+                newUserType = scanner.next();
+                if (newUserType.equalsIgnoreCase("admin") || newUserType.equalsIgnoreCase("user")) {
+                    checkUserType = true;
+                } else {
+                    System.out.println("Kullanıcı tipi sadece 'admin' veya 'user' olabilir.");
+                }
+            }
+
+            System.out.print("Kullanıcı bakiyesi: ");
+            String newUserBalance = scanner.next();
+
+            output.write(newUsername + "\t" + newPass + "\t" + newUserType + "\t" + newUserBalance + "\n");
+            output.close();
+            fstream.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void getUserInfos() {
         user.userinfo.clear();

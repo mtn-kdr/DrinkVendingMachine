@@ -59,13 +59,6 @@ public class Main {
                     Lütfen İşlem Seçiniz""");
             inputValue = scanner.nextInt();
 
-            //TODO
-            /* -
-                menunun duzgunlesitirilmesi
-                final kavrami icin uygun yer bulunmasi
-                logger?
-
-            * */
 
 
             dvm.loadStockFromFile(dvm);
