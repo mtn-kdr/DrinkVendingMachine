@@ -294,6 +294,8 @@ public class DrinkVendingMachine implements MachineOperations {
         dvm.setCoffeeBeans(scanner.nextInt() + dvm.getCoffeeBeans());
         System.out.print("Eklemek istediğiniz şeker miktarını yazın(gr): ");
         dvm.setSugar(scanner.nextInt() + dvm.getSugar());
+        System.out.print("Eklemek istediğiniz bardak miktarını yazın: ");
+        dvm.setDisposableCups(scanner.nextInt() + dvm.getDisposableCups());
     }
 
     @Override
