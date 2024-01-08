@@ -2,6 +2,6 @@ Water: 1150
 Milk: 700
 Coffee Beans: 985
 Disposable Cups: 16
-Money: 0.0
+Money: 75.0
 Tea: 980
 Sugar: 1000
